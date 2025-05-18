@@ -1,43 +1,43 @@
 # Diploma_2025_Backend
 
-This repository contains the backend service for microservice that analyzes and annotates tactical images.  
-The service is built with **Python + Flask**, uses **OpenCV** for drawing annotations, and relies on the **Roboflow Inference SDK** to run the *military_objects/1* model hosted on Roboflow.
+This repository contains the backend service for a microservice that analyzes and annotates tactical images.  
+The service is built with **Python + Flask**, uses **OpenCV** for drawing annotations, and relies on the **Roboflow Inference SDK** to run the *military_objects/1* model hosted on Roboflow.
 
-> **Live demo:** [Click here](https://diploma-server-xmh0.onrender.com)
+> **Live demo:** [Click here](https://diploma-server-xmh0.onrender.com)
 
 ---
 
-## ✨ Key Features
+## ✨ Key Features
 
 | Area | Details |
 |------|---------|
-| **REST API** | `POST /process_image` accepts an image, returns JSON + public URLs to results. |
+| **REST API**             | `POST /process_image` accepts an image and returns JSON + public URLs to the results. |
 | **Roboflow integration** | Sends each upload to the hosted *military_objects/1* model and receives detections. |
-| **Auto-annotation** | Draws bounding boxes + labels on the image with OpenCV. |
-| **Rich metadata** | Saves a per-request `object_info.json` (ID, class, confidence, coordinates). |
-| **Result hosting** | Annotated image and JSON are exposed via `GET /results/<file>` so the frontend can fetch or preview them. |
-| **Docker-ready** | A basic `Dockerfile` can wrap the service for portable deployment. |
+| **Auto‑annotation**      | Draws bounding boxes + labels on the image with OpenCV. |
+| **Rich metadata**        | Saves a per‑request `object_info.json` (ID, class, confidence, coordinates). |
+| **Result hosting**       | Annotated image and JSON are exposed via `GET /results/<file>` so the frontend can fetch or preview them. |
+| **Docker‑ready**         | A basic `Dockerfile` can wrap the service for portable deployment. |
 
 ---
 
-## 🛠️ Technology Stack
+## 🛠️ Technology Stack
 
-- **Python 3.10+**
+- **Python 3.10+**  
 - **Flask** – lightweight web framework  
-- **OpenCV-Python** – image handling & drawing  
-- **Roboflow Inference SDK** – cloud object-detection API  
-- **Flask-CORS** – cross-origin requests for the frontend  
-- **Docker** *(optional, deployment)*
+- **OpenCV‑Python** – image handling & drawing  
+- **Roboflow Inference SDK** – cloud object‑detection API  
+- **Flask‑CORS** – cross‑origin requests for the frontend  
+- **Docker** *(optional, deployment)*  
 
 ---
 
-## 🚀 Quick Start
+## 🚀 Quick Start
 
 1. **Clone the repo**
 
    ```bash
-   git clone https://github.com/purpleFade/Practice_2024_backend.git
-   cd Practice_2024_backend
+   git clone https://github.com/purpleFade/Diploma_2025_backend.git
+   cd Diploma_2025_backend
    ```
 
 2. **Create & activate a virtual environment**
@@ -53,7 +53,7 @@ The service is built with **Python + Flask**, uses **OpenCV** for drawing annota
    pip install -r requirements.txt
    ```
 
-4. **Configure your Roboflow API key**
+4. **Configure your Roboflow API key**
 
    ```bash
    # macOS / Linux
@@ -63,7 +63,7 @@ The service is built with **Python + Flask**, uses **OpenCV** for drawing annota
    setx ROBOFLOW_API_KEY "YOUR_KEY_HERE"
    ```
 
-   > You will find your key in the **Roboflow → Settings → API Key** panel.  
+   > You will find your key in the **Roboflow → Settings → API Key** panel.  
    > The service fails fast if the variable is missing.
 
 5. **Run the server**
@@ -76,19 +76,19 @@ The service is built with **Python + Flask**, uses **OpenCV** for drawing annota
 
 ---
 
-## 📡 API Endpoints
+## 📡 API Endpoints
 
-| Method | Route | Body / Params | Description |
-|--------|-------|---------------|-------------|
-| **POST** | `/process_image` | *multipart/form-data* field **image** | Uploads an image, runs Roboflow detection, returns JSON and absolute URLs to the results. |
-| **GET** | `/results/<path>` | — | Serves images or JSON that live under the `results/` directory. |
+| Method | Route             | Body / Params                         | Description |
+|--------|-------------------|---------------------------------------|-------------|
+| **POST** | `/process_image` | *multipart/form‑data* field **image** | Uploads an image, runs Roboflow detection, and returns JSON + absolute result URLs. |
+| **GET**  | `/results/<path>` | — | Serves images or JSON that live under the `results/` directory. |
 
 Successful `POST /process_image` response (truncated):
 
 ```json
 {
   "message": "Image processed successfully with Roboflow.",
-  "results_folder": "run_20250518_161530_a1b2c3",
+  "results_folder": "run_YYYYMMDD_HHMMSS_a1b2c3",
   "annotated_image_url": "http://127.0.0.1:5000/results/run_.../yolo.jpg",
   "object_info_url": "http://127.0.0.1:5000/results/run_.../object_info.json",
   "object_info": [
@@ -104,22 +104,22 @@ Successful `POST /process_image` response (truncated):
 
 ---
 
-## 🗂️ Folder Structure
+## 🗂️ Folder Structure
 
 ```
-Practice_2024_backend/
+Diploma_2025_backend/
 ├── app.py               # Main Flask application
 ├── utils/               # (Optional) utility helpers
-├── results/             # Auto-created; holds per-request subfolders
+├── results/             # Auto‑created; holds per‑request subfolders
 ├── requirements.txt     # Python dependencies
 └── README.md            # Project documentation (this file)
 ```
 
 ---
 
-## 🐳 Docker (optional)
+## 🐳 Docker (optional)
 
-Build & run:
+Build & run:
 
 ```bash
 docker build -t diploma-backend .
@@ -131,7 +131,7 @@ docker run -d -p 5000:5000 -e ROBOFLOW_API_KEY=YOUR_KEY diploma-backend
 ## 🤝 Contributing
 
 1. **Fork** the repo  
-2. Create a **feature branch**  
+2. **Create** a feature branch  
    ```bash
    git checkout -b feature/my-idea
    ```
@@ -145,4 +145,4 @@ docker run -d -p 5000:5000 -e ROBOFLOW_API_KEY=YOUR_KEY diploma-backend
 
 ## 📝 License
 
-Distributed under the **MIT License**. See the `LICENSE` file for details.
+Distributed under the **MIT License**. See the `LICENSE` file for details.

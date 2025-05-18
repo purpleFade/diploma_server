@@ -12,6 +12,8 @@ This repository contains the backend service for the **Practice 2024 Project**, 
 - **YOLOv3 Integration**: Leverages YOLOv3 for real-time object detection in tactical scenarios.
 - **Scalable Architecture**: Designed with microservices principles for ease of extension and deployment.
 
+## You can preview this service. Click [HERE](https://diploma-client-jvx7.onrender.com/) 
+
 ## Technology Stack
 
 - **Python**: Core language for backend development.

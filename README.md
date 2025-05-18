@@ -1,94 +1,148 @@
+# Diploma_2025_Backend
+
+This repository contains the backend service for microservice that analyzes and annotates tactical images.  
+The service is built with **Python + Flask**, uses **OpenCV** for drawing annotations, and relies on the **Roboflow Inference SDK** to run the *military_objects/1* model hosted on Roboflow.
+
+> **Live demo:** [Click here](https://diploma-server-xmh0.onrender.com)
 
 ---
 
-# Practice_2024_Backend
+## ✨ Key Features
 
-This repository contains the backend service for the **Practice 2024 Project**, a microservice-based solution for analyzing and processing tactical images. The backend is built using Python, Flask, and OpenCV, designed to handle image analysis tasks efficiently and interact seamlessly with the frontend application.
+| Area | Details |
+|------|---------|
+| **REST API** | `POST /process_image` accepts an image, returns JSON + public URLs to results. |
+| **Roboflow integration** | Sends each upload to the hosted *military_objects/1* model and receives detections. |
+| **Auto-annotation** | Draws bounding boxes + labels on the image with OpenCV. |
+| **Rich metadata** | Saves a per-request `object_info.json` (ID, class, confidence, coordinates). |
+| **Result hosting** | Annotated image and JSON are exposed via `GET /results/<file>` so the frontend can fetch or preview them. |
+| **Docker-ready** | A basic `Dockerfile` can wrap the service for portable deployment. |
 
-## Features
+---
 
-- **RESTful API**: Handles image uploads, processing, and returning results in JSON format.
-- **Image Analysis**: Implements advanced image processing techniques using OpenCV (edge detection, object detection, and segmentation).
-- **YOLOv3 Integration**: Leverages YOLOv3 for real-time object detection in tactical scenarios.
-- **Scalable Architecture**: Designed with microservices principles for ease of extension and deployment.
+## 🛠️ Technology Stack
 
-## You can preview this service. Click [HERE](https://diploma-client-jvx7.onrender.com/) 
+- **Python 3.10+**
+- **Flask** – lightweight web framework  
+- **OpenCV-Python** – image handling & drawing  
+- **Roboflow Inference SDK** – cloud object-detection API  
+- **Flask-CORS** – cross-origin requests for the frontend  
+- **Docker** *(optional, deployment)*
 
-## Technology Stack
+---
 
-- **Python**: Core language for backend development.
-- **Flask**: Lightweight framework for building REST APIs.
-- **OpenCV**: Image processing and computer vision library.
-- **YOLOv3**: Deep learning-based object detection.
-- **Docker** (optional): Containerization for deployment.
+## 🚀 Quick Start
 
-## Installation
+1. **Clone the repo**
 
-1. Clone the repository:
    ```bash
    git clone https://github.com/purpleFade/Practice_2024_backend.git
    cd Practice_2024_backend
    ```
 
-2. Create a virtual environment and activate it:
+2. **Create & activate a virtual environment**
+
    ```bash
-   python3 -m venv venv
-   source venv/bin/activate  # On Windows: venv\Scripts\activate
+   python -m venv venv
+   source venv/bin/activate      # Windows: venv\Scripts\activate
    ```
 
-3. Install dependencies:
+3. **Install dependencies**
+
    ```bash
    pip install -r requirements.txt
    ```
 
-4. Download YOLOv3 weights (if required):
-   - Place `yolov3.weights`, `yolov3.cfg`, and `coco.names` in the `models` folder.
+4. **Configure your Roboflow API key**
 
-## Usage
+   ```bash
+   # macOS / Linux
+   export ROBOFLOW_API_KEY="YOUR_KEY_HERE"
 
-1. Start the Flask server:
+   # Windows (PowerShell)
+   setx ROBOFLOW_API_KEY "YOUR_KEY_HERE"
+   ```
+
+   > You will find your key in the **Roboflow → Settings → API Key** panel.  
+   > The service fails fast if the variable is missing.
+
+5. **Run the server**
+
    ```bash
    python app.py
    ```
 
-2. The server will run locally on `http://127.0.0.1:5000/`.
+   The API is now available at **http://127.0.0.1:5000**.
 
-3. API Endpoints:
-   - **POST** `/process_image`: Accepts an image file for processing.
-   - **GET** `/results/<filename>`: Fetches the processed results.
+---
 
-## Folder Structure
+## 📡 API Endpoints
+
+| Method | Route | Body / Params | Description |
+|--------|-------|---------------|-------------|
+| **POST** | `/process_image` | *multipart/form-data* field **image** | Uploads an image, runs Roboflow detection, returns JSON and absolute URLs to the results. |
+| **GET** | `/results/<path>` | — | Serves images or JSON that live under the `results/` directory. |
+
+Successful `POST /process_image` response (truncated):
+
+```json
+{
+  "message": "Image processed successfully with Roboflow.",
+  "results_folder": "run_20250518_161530_a1b2c3",
+  "annotated_image_url": "http://127.0.0.1:5000/results/run_.../yolo.jpg",
+  "object_info_url": "http://127.0.0.1:5000/results/run_.../object_info.json",
+  "object_info": [
+    {
+      "id": 0,
+      "type": "tank",
+      "confidence": 0.92,
+      "coordinates": { "x": 34, "y": 58, "width": 220, "height": 130 }
+    }
+  ]
+}
+```
+
+---
+
+## 🗂️ Folder Structure
 
 ```
 Practice_2024_backend/
 ├── app.py               # Main Flask application
-├── models/              # YOLOv3 model files
-├── utils/               # Utility scripts for image processing
-├── static/              # Static files (e.g., processed images)
-├── templates/           # HTML templates (if any)
+├── utils/               # (Optional) utility helpers
+├── results/             # Auto-created; holds per-request subfolders
 ├── requirements.txt     # Python dependencies
-└── README.md            # Project documentation
+└── README.md            # Project documentation (this file)
 ```
 
-## Contributing
+---
 
-1. Fork this repository.
-2. Create a feature branch:
-   ```bash
-   git checkout -b feature-name
-   ```
-3. Commit your changes:
-   ```bash
-   git commit -m "Add feature description"
-   ```
-4. Push to your branch:
-   ```bash
-   git push origin feature-name
-   ```
-5. Submit a pull request.
+## 🐳 Docker (optional)
 
-## License
+Build & run:
 
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+```bash
+docker build -t diploma-backend .
+docker run -d -p 5000:5000 -e ROBOFLOW_API_KEY=YOUR_KEY diploma-backend
+```
 
 ---
+
+## 🤝 Contributing
+
+1. **Fork** the repo  
+2. Create a **feature branch**  
+   ```bash
+   git checkout -b feature/my-idea
+   ```
+3. **Commit** your changes  
+   ```bash
+   git commit -m "Describe my idea"
+   ```
+4. **Push** to your fork and open a **pull request**
+
+---
+
+## 📝 License
+
+Distributed under the **MIT License**. See the `LICENSE` file for details.
